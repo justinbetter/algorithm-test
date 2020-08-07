@@ -12,7 +12,7 @@ public class coinsChange {
         System.out.println(result);
     }
 
-    public static int coinChanges(int[] coins, int amount) {
+    private static int coinChanges(int[] coins, int amount) {
         int max = amount + 1;
         int[] dp = new int[amount + 1];
         Arrays.fill(dp, max);
