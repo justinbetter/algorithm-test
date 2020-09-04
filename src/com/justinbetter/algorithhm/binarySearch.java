@@ -1,20 +1,78 @@
 package com.justinbetter.algorithhm;
 
+import java.text.DecimalFormat;
+
 public class binarySearch {
 
     public static void main(String[] args) {
         // write your code here
+        int number = 2;
+        System.out.println(mySqrt2(number, 0.0001));
+        System.out.println(SqrtByNewton(number, 0.001));
+    }
+
+    //√2 = 1.41421
+    static Double mySqrt2(int x, double precision) {
+        double left = 0;
+        double right = (double) x;
+        double lastMid = right;
+        double mid = (left + right) / 2.0;
+        // 判断精确
+        while (abs(mid - lastMid) > precision) {
+            if (mid * mid > x) {
+                right = mid;
+            } else {
+                left = mid;
+            }
+            lastMid = mid;
+            mid = (left + right) / 2.0;
+        }
+        return  mid;
+//        DecimalFormat df = new DecimalFormat("0.00");
+//        return df.format(mid);
+    }
+
+    static double SqrtByNewton(int n, double precision) {
+        double val = n; //最终
+        double last; //保存上一个计算的值
+        do {
+            last = val;
+            val = (val + n / val) / 2;
+        } while (Math.abs(val - last) > precision);
+        return val;
+    }
+
+    public static double abs(double a) {
+        return (a <= 0.0D) ? 0.0D - a : a;
+    }
+
+    static int mySqrt(int x) {
+        //二分法
+        int left = 0;
+        int right = x;
+        int ans = -1;
+        while (left <= right) {
+            int mid = left + ((right - left) >> 1);
+            if ((long) mid * mid > x) {
+                right = mid - 1;
+            } else {
+                ans = mid;
+                left = mid + 1;
+            }
+        }
+        return ans;
+
     }
 
     int binary_search(int[] nums, int target) {
         int left = 0, right = nums.length - 1;
-        while(left <= right) {
+        while (left <= right) {
             int mid = left + (right - left) / 2;
             if (nums[mid] < target) {
                 left = mid + 1;
             } else if (nums[mid] > target) {
                 right = mid - 1;
-            } else if(nums[mid] == target) {
+            } else if (nums[mid] == target) {
                 // 直接返回
                 return mid;
             }
@@ -60,4 +118,5 @@ public class binarySearch {
         if (right < 0 || nums[right] != target)
             return -1;
         return right;
-    }}
+    }
+}
