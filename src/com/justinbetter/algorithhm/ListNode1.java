@@ -11,6 +11,21 @@ public class ListNode1 {
     }
 
     static class Solution {
+
+        ListNode mergeLR(ListNode left, ListNode right) {
+            ListNode head = left;
+            ListNode next = null;
+            while (left.next != null) {
+                next = right.next;
+                right.next = left.next;
+                left.next = right;
+                left = right.next;
+                right = next;
+            }
+            left.next = right;
+            return head;
+        }
+
         //链表1->2->3->4->5，按照1->5->2->4->3重新组装
         ListNode assemble(ListNode head) {
             //双指针获取中点，反转后半部分链表，拼接新链表
@@ -71,7 +86,19 @@ public class ListNode1 {
         node3.next = node4;
         node2.next = node3;
         node1.next = node2;
-        ListNode resNode = new Solution().assemble(node1);
+        ListNode _node1 = new ListNode(12);
+        ListNode _node2 = new ListNode(22);
+        ListNode _node3 = new ListNode(32);
+        ListNode _node4 = new ListNode(42);
+        ListNode _node5 = new ListNode(52);
+        _node4.next = _node5;
+        _node3.next = _node4;
+        _node2.next = _node3;
+        _node1.next = _node2;
+        Solution solution = new Solution();
+        ListNode resNode = solution.mergeLR(node1, _node1);
+        solution.printHead(resNode, "merge ");
+
     }
 
 
