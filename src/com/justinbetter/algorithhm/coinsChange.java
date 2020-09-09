@@ -12,6 +12,11 @@ public class coinsChange {
         System.out.println(result);
     }
 
+    //手写第2遍
+    static int coinChanges2(int[] coins, int amount) {
+        return -1;
+    }
+
     private static int coinChanges(int[] coins, int amount) {
         int max = amount + 1;
         int[] dp = new int[amount + 1];
