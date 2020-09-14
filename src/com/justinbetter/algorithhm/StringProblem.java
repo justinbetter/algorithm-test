@@ -1,12 +1,98 @@
 package com.justinbetter.algorithhm;
 
-import java.util.HashMap;
+import java.util.*;
 
 public class StringProblem {
 
     public static void main(java.lang.String[] args) {
         // write your code here
         System.out.println(lengthOfLongestSubstring("aaabcssds"));
+    }
+
+    //复原IP地址
+    class restoreIpAddressesSolution {
+        static final int SEG_COUNT = 4;
+        List<String> ans = new ArrayList<String>();
+        int[] segments = new int[SEG_COUNT];
+
+        public List<String> restoreIpAddresses(String s) {
+            segments = new int[SEG_COUNT];
+            dfs(s, 0, 0);
+            return ans;
+        }
+
+        public void dfs(String s, int segId, int segStart) {
+            //回溯结束条件
+            // 如果找到了 4 段 IP 地址并且遍历完了字符串，那么就是一种答案
+            if (segId == SEG_COUNT) {
+                if (segStart == s.length()) {
+                    StringBuffer ipAddr = new StringBuffer();
+                    for (int i = 0; i < SEG_COUNT; ++i) {
+                        ipAddr.append(segments[i]);
+                        if (i != SEG_COUNT - 1) {
+                            ipAddr.append('.');
+                        }
+                    }
+                    ans.add(ipAddr.toString());
+                }
+                return;
+            }
+
+            // 如果还没有找到 4 段 IP 地址就已经遍历完了字符串，那么提前回溯
+            if (segStart == s.length()) {
+                return;
+            }
+
+            // 由于不能有前导零，如果当前数字为 0，那么这一段 IP 地址只能为 0
+            if (s.charAt(segStart) == '0') {
+                segments[segId] = 0;
+                dfs(s, segId + 1, segStart + 1);
+            }
+
+            // 一般情况，枚举每一种可能性并递归
+            int addr = 0;
+            for (int segEnd = segStart; segEnd < s.length(); ++segEnd) {
+                //获取该段的数字，判断符合255的规则，继续回溯
+                addr = addr * 10 + (s.charAt(segEnd) - '0');
+                if (addr > 0 && addr <= 0xFF) { //0xFF is an equal int(255).
+                    segments[segId] = addr;
+                    dfs(s, segId + 1, segEnd + 1);
+                } else {
+                    break;
+                }
+            }
+        }
+    }
+
+    //简化路径
+    class simplifyPathSolution {
+        public String simplifyPath(String path) {
+            Deque<String> stack = new LinkedList<>();
+            for (String item : path.split("/")) {
+                if (item.equals("..")) {
+                    if (!stack.isEmpty()) stack.pop();
+                } else if (!item.isEmpty() && !item.equals(".")) stack.push(item);
+            }
+            String res = "";
+            for (String d : stack) res = "/" + d + res;
+            return res.isEmpty() ? "/" : res;
+        }
+    }
+
+    //翻转字符串里的单词
+    class reverseWordsSolution {
+        public String reverseWords(String s) {
+            s = s.trim(); // 删除首尾空格
+            int j = s.length() - 1, i = j;
+            StringBuilder res = new StringBuilder();
+            while (i >= 0) {
+                while (i >= 0 && s.charAt(i) != ' ') i--; // 搜索首个空格
+                res.append(s.substring(i + 1, j + 1) + " "); // 添加单词
+                while (i >= 0 && s.charAt(i) == ' ') i--; // 跳过单词间空格
+                j = i; // j 指向下个单词的尾字符
+            }
+            return res.toString().trim(); // 转化为字符串并返回
+        }
     }
 
     class SolutionMultiply {
@@ -44,6 +130,7 @@ public class StringProblem {
             }
             return ans;
         }
+
         //字符串相加
         public String addStrings(String num1, String num2) {
             int i = num1.length() - 1, j = num2.length() - 1, add = 0;
