@@ -27,8 +27,48 @@ public class StringProblem {
         return res;
     }
 
+    //字符串的排列
+    static class SolutionCheckinclusion {
+
+        public boolean checkInclusion(String s1, String s2) {
+            //保存每个字母出现的次数
+            int length1 = s1.length();
+            int length2 = s2.length();
+            if (length1 > length2){
+                return false;
+            }
+            int[] c1 = new int[26];
+            int[] c2 = new int[26];
+
+            //填满排列1的位置
+            for (int i = 0; i < length1; i++) {
+                c1[s1.charAt(i) - 'a']++;
+                c2[s2.charAt(i) - 'a']++;
+            }
+
+            for (int i = length1; i < length2; i++) {
+                if (mathches(c1, c2)) {
+                    return true;
+                }
+                c2[s2.charAt(i-length1) - 'a']--;
+                c2[s2.charAt(i) - 'a']++;
+            }
+            return mathches(c1, c2);
+        }
+
+        //比较字母出现次数
+        public boolean mathches(int[] a, int[] b) {
+            for (int i = 0; i < 26; i++) {
+                if (a[i] != b[i]) {
+                    return false;
+                }
+            }
+            return true;
+        }
+    }
+
     //最长公共前缀
-   static class SolutionLongestCommonPrefix {
+    static class SolutionLongestCommonPrefix {
         public String longestCommonPrefix(String[] strs) {
             if (strs == null || strs.length == 0) {
                 return "";
