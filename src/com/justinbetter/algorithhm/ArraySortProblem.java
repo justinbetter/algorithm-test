@@ -24,7 +24,7 @@ public class ArraySortProblem {
             for (int i = 1; i <= n; i++) {
                 permutations[i] = permutations[i - 1] * i;
             }
-            boolean[] used = new boolean[n + 1];
+            used = new boolean[n + 1];
             Arrays.fill(used, false);
             //确定范围
             StringBuilder path = new StringBuilder();
