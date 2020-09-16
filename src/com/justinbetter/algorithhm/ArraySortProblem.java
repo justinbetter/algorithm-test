@@ -10,6 +10,183 @@ public class ArraySortProblem {
         System.out.println(new findKthLargestSolution().findKthLargest2(nums, 2));
     }
 
+    //第k个排列
+    //深度遍历+剪枝
+    class getPermutationSolution {
+
+        //获取排列数 确定K范围
+        public String getPermutation2(int n, int k) {
+            this.n = n;
+            this.k = k;
+            //计算阶乘,获取所有的排列数
+            int[] permutations = new int[n + 1];
+            permutations[0] = 1;
+            for (int i = 1; i <= n; i++) {
+                permutations[i] = permutations[i - 1] * i;
+            }
+            boolean[] used = new boolean[n + 1];
+            Arrays.fill(used, false);
+            //确定范围
+            StringBuilder path = new StringBuilder();
+            dfs2(0, path, permutations);
+            return path.toString();
+        }
+
+        public void dfs2(int index, StringBuilder path, int[] permutations) {
+            if (index == n) {
+                return;
+            }
+
+            //剩下的排列数
+            for (int i = 1; i <= n; i++) {
+                int counts = permutations[n - 1 - index];
+                if (used[i]) {
+                    continue;
+                }
+                if (counts < k) { //不再排列中
+                    k -= counts;
+                    continue;
+                }
+                //在排列中
+                path.append(i);
+                used[i] = true;
+                dfs2(index + 1, path, permutations);
+                return;
+            }
+
+        }
+
+
+        /**
+         * 记录数字是否使用过
+         */
+        private boolean[] used;
+
+        /**
+         * 阶乘数组
+         */
+        private int[] factorial;
+
+        private int n;
+        private int k;
+
+        public String getPermutation(int n, int k) {
+            this.n = n;
+            this.k = k;
+            //计算阶乘，获取每个排列的个数，可以通过个数判断结果会在哪个范围
+            calculateFactorial(n);
+
+            // 查找全排列需要的布尔数组
+            used = new boolean[n + 1];
+            Arrays.fill(used, false);
+
+            StringBuilder path = new StringBuilder();
+            //遍历第一层
+            dfs(0, path);
+            return path.toString();
+        }
+
+
+        /**
+         * @param index 在这一步之前已经选择了几个数字，其值恰好等于这一步需要确定的下标位置
+         * @param path
+         */
+        private void dfs(int index, StringBuilder path) {
+            //说明到最后的数字了，也就是遍历到叶子节点了，没有必要再继续了
+            if (index == n) {
+                return;
+            }
+
+            //计算还未确定的数字的全排列的个数，第 1 次进入的时候是 n - 1
+            //获取排列的个数，由于是递归，index表示确定的排列数字，这里要排除，以便获取剩下的排列个数
+            int cnt = factorial[n - 1 - index];
+            //从 1到n 开始迭代
+            for (int i = 1; i <= n; i++) {
+                if (used[i]) {
+                    continue;
+                }
+                //如果排列的个数小于k，说明k不在这个i的排列中，进入下次循环；
+                //将k减去此次的排列数，便于与下次的排列数比较
+                if (cnt < k) {
+                    k -= cnt;
+                    continue;
+                }
+                // 走到这里，说明这里的排列个数 >= k,加入排列的第一个数字，其他的数字继续递归；
+                // 同时由于第一个数字已经用了，所以标记下，防止之后对这个数字重复计算
+                path.append(i);
+                used[i] = true;
+                //进去子排列的递归
+                dfs(index + 1, path);
+                // 注意 1：不可以回溯（重置变量），算法设计是「一下子来到叶子结点」，没有回头的过程
+                // 注意 2：这里要加 return，后面的数没有必要遍历去尝试了
+                return;
+            }
+        }
+
+        /**
+         * 计算阶乘数组
+         *
+         * @param n
+         */
+        private void calculateFactorial(int n) {
+            factorial = new int[n + 1];
+            factorial[0] = 1;
+            for (int i = 1; i <= n; i++) {
+                factorial[i] = factorial[i - 1] * i;
+            }
+        }
+    }
+
+    //最长连续序列
+    class longestConsecutiveSolution {
+        public int longestConsecutive2(int[] nums) {
+            HashSet<Integer> hs = new HashSet<>();
+            for (int num : nums) {
+                hs.add(num);
+            }
+            int longResult = 0;
+            for (int i = 0; i < nums.length; i++) {
+                if (!hs.contains(nums[i] - 1)) {
+                    int currentNum = nums[i];
+                    int currentLong = 1;
+                    while (hs.contains(currentNum + 1)) {
+                        currentLong++;
+                        currentNum++;
+                    }
+                    longResult = Math.max(currentLong, longResult);
+                }
+            }
+            return longResult;
+        }
+
+        //全部存入hash集合，迭代判断当前和之后+1的数是否在hash中，在的话+1，不在的话下次循环；
+        //如果之前-1的hash在，说明前面的迭代计数过了，跳过，Math.max比较每次序列长度，迭代结束；返回最终的序列长度
+        public int longestConsecutive(int[] nums) {
+            Set<Integer> num_set = new HashSet<Integer>();
+            for (int num : nums) {
+                num_set.add(num);
+            }
+
+            int longestStreak = 0;
+
+            for (int num : num_set) {
+                if (!num_set.contains(num - 1)) {
+                    int currentNum = num;
+                    int currentStreak = 1;
+
+                    while (num_set.contains(currentNum + 1)) {
+                        currentNum += 1;
+                        currentStreak += 1;
+                    }
+
+                    longestStreak = Math.max(longestStreak, currentStreak);
+                }
+            }
+
+            return longestStreak;
+        }
+    }
+
     //数组中的第K个最大元素：堆排序
     //插入元素的过程，我们知道每次与n/(2^x)的位置进行比较，所以，插入元素的时间复杂度为O(log n)。插入元素时进行的堆化，也叫自下而上的堆化
     //删除了堆顶元素 我们可以把最后一个元素移到根节点的位置，开始自上而下的堆化
