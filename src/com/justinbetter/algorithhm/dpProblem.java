@@ -1,9 +1,42 @@
 package com.justinbetter.algorithhm;
 
+import java.util.List;
+
 public class dpProblem {
 
     public static void main(String[] args) {
         // write your code here
+    }
+
+    //三角形最小路径和
+    class minimumTotalSolution {
+        public int minimumTotal(List<List<Integer>> triangle) {
+            //dp[i][j] = min(dp[i+1][j+1],dp[i+1][j])+triangle[i][j], triangle[i][j] 表示位置 (i,j) 对应的元素值。
+            int n = triangle.size();
+            int[][] dp = new int[n + 1][n + 1];
+            for (int i = n - 1; i >= 0; i--) { //底部行
+                for (int j = 0; j <= i; j++) { //首列，三角形边界就是n
+                    dp[i][j] = Math.min(dp[i + 1][j], dp[i + 1][j + 1]) + triangle.get(i).get(j);
+                }
+            }
+            return dp[0][0];
+        }
+
+        public int minimumTotal2(List<List<Integer>> triangle) {
+            //第一反应没写出来 dp[i] = Math.min(dp[i-1]+dp)
+            //定义二维 dp 数组，将解法二中「自顶向下的递归」改为「自底向上的递推」。
+            //dp[i][j] = min(dp[i+1][j+1],dp[i+1][j])+triangle[i][j], triangle[i][j] 表示位置 (i,j) 对应的元素值。
+            int n = triangle.size();
+            // dp[i][j] 表示从点 (i, j) 到底边的最小路径和。
+            int[][] dp = new int[n + 1][n + 1];
+            // 从三角形的最后一行开始递推。
+            for (int i = n - 1; i >= 0; i--) {
+                for (int j = 0; j <= i; j++) {
+                    dp[i][j] = Math.min(dp[i + 1][j], dp[i + 1][j + 1]) + triangle.get(i).get(j);
+                }
+            }
+            return dp[0][0];
+        }
     }
 
     //最大子序和
