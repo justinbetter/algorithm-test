@@ -6,6 +6,45 @@ public class dpProblem {
         // write your code here
     }
 
+    //最大子序和
+    class maxSubArraySolution {
+
+        public int maxSubArray(int[] nums) {
+            int ans = 0;
+            int pre = nums[0];
+            for (int i = 0; i < nums.length; i++) {
+                int currentNum = nums[i];
+                pre = Math.max(pre + currentNum, currentNum);
+                ans = Math.max(ans, ans + pre);
+            }
+            return ans;
+        }
+
+        //动态规划，遍历每个位置的和下一个数的最大值即可
+        public int maxSubArray2(int[] nums) {
+            int pre = 0, maxAns = nums[0];
+            for (int x : nums) {
+                pre = Math.max(pre + x, x);
+                maxAns = Math.max(maxAns, pre);
+            }
+            return maxAns;
+        }
+
+        public int maxSubArray1(int[] nums) {
+            int ans = nums[0];
+            int sum = 0;
+            for (int num : nums) {
+                if (sum > 0) {
+                    sum += num;
+                } else {
+                    sum = num;
+                }
+                ans = Math.max(ans, sum);
+            }
+            return ans;
+        }
+    }
+
     class maxProfitSolution {
 
         //多次交易需要记录上一次的卖出利润
