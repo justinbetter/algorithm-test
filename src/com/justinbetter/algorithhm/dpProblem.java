@@ -10,12 +10,12 @@ public class dpProblem {
     class maxSubArraySolution {
 
         public int maxSubArray(int[] nums) {
-            int ans = 0;
-            int pre = nums[0];
+            int pre = 0;
+            int ans = nums[0];
             for (int i = 0; i < nums.length; i++) {
                 int currentNum = nums[i];
                 pre = Math.max(pre + currentNum, currentNum);
-                ans = Math.max(ans, ans + pre);
+                ans = Math.max(ans, pre);
             }
             return ans;
         }
