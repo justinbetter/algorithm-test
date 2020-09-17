@@ -67,6 +67,96 @@ public class ArraySortProblem {
         }
     }
 
+    //合并区间
+    class mergeSolution {
+        public int[][] merge(int[][] intervals) {
+            List<int[]> res = new ArrayList<>();
+            if (intervals.length == 0 || intervals == null) return res.toArray(new int[0][]);
+            // 对起点终点进行排序
+            Arrays.sort(intervals, (a, b) -> a[0] - b[0]);
+            int i = 0;
+            //迭代区间元素
+            while (i < intervals.length) {
+                //获取区间左右端点
+                int left = intervals[i][0];
+                int right = intervals[i][1];
+                // 如果有重叠，循环判断哪个起点满足条件
+                //如果下一个区间的左端点小于当前区间的右端点，说明有重合，合并区间，设置有右端点为下一个区间的右端点；
+                //不断循环下一个区间，有重合的就和当前区间合并
+                while (i < intervals.length - 1 && intervals[i + 1][0] <= right) {
+                    i++;
+                    right = Math.max(right, intervals[i][1]);
+                }
+                // 将现在的区间放进res里面
+                res.add(new int[]{left, right});
+                // 接着判断下一个区间
+                i++;
+            }
+            return res.toArray(new int[0][]);
+        }
+    }
+
+    //朋友圈 DFS
+    public class findCircleNumSolution {
+
+        //广度遍历
+        public int findCircleNum2(int[][] M) {
+            int[] visited = new int[M.length];
+            int count = 0;
+            //队列
+            Queue < Integer > queue = new LinkedList < > ();
+            //横向入队
+            for (int i = 0; i < M.length; i++) {
+                if (visited[i] == 0) {
+                    //如果没有访问过加入队列
+                    queue.add(i);
+                    //开始广度搜索，针对i遍历行列
+                    while (!queue.isEmpty()) {
+                        //出队，获取刚才访问的节点
+                        int s = queue.remove();
+                        visited[s] = 1;
+                        //纵向遍历，判断如果没有访问过，入队，进行横向遍历
+                        for (int j = 0; j < M.length; j++) {
+                            if (M[s][j] == 1 && visited[j] == 0)
+                                queue.add(j);
+                        }
+                    }
+                    count++;
+                }
+            }
+            return count;
+        }
+
+
+        //一次遍历i所在的行和列
+        public void dfs(int[][] M, int[] visited, int i) {
+            //纵向遍历i，横向遍历j，如果该数字为1且没访问过，继续深度遍历，并将该数字位置记录visited
+            for (int j = 0; j < M.length; j++) {
+                if (M[i][j] == 1 && visited[j] == 0) {
+                    visited[j] = 1;
+                    //从j位置继续纵向遍历，因为是对称的，所以该行位置和该列值是相同的，等于遍历列了
+                    dfs(M, visited, j);
+                }
+            }
+        }
+        //深度遍历
+        public int findCircleNum(int[][] M) {
+            //设置访问过的数组
+            int[] visited = new int[M.length];
+            //记录深度遍历次数
+            int count = 0;
+            //纵向遍历
+            for (int i = 0; i < M.length; i++) {
+                //第i行遍历，如果没有访问过，开始深度遍历该行
+                if (visited[i] == 0) {
+                    dfs(M, visited, i);
+                    count++;
+                }
+            }
+            return count;
+        }
+    }
+
     //第k个排列
     //深度遍历+剪枝
     class getPermutationSolution {
