@@ -8,6 +8,23 @@ public class DataStructureProblem {
         // write your code here
     }
 
+    //LFUCache
+    class LFUCache {
+
+        public LFUCache(int capacity) {
+
+        }
+
+        public int get(int key) {
+            return -1;
+        }
+
+        public void put(int key, int value) {
+
+        }
+    }
+
+    //O(1)数据结构
     class AllOne {
         class DListNode {
             int value;
