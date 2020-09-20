@@ -1,11 +1,76 @@
 package com.justinbetter.algorithhm;
 
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 public class dpProblem {
 
     public static void main(String[] args) {
         // write your code here
+    }
+
+    //俄罗斯套娃
+    class maxEnvelopesSolution {
+
+        public int maxEnvelopes(int[][] envelopes) {
+            //按照w升序排列，h降序排列；逆序排序保证在 w 相同的数对中最多只选取一个 ，降低了信息量
+            // sort on increasing in first dimension and decreasing in second
+            Arrays.sort(envelopes, new Comparator<int[]>() {
+                public int compare(int[] arr1, int[] arr2) {
+                    if (arr1[0] == arr2[0]) {
+                        return arr2[1] - arr1[1];
+                    } else {
+                        return arr1[0] - arr2[0];
+                    }
+                }
+            });
+            //将h遍历出来，获取h的最长递增子序列
+            // extract the second dimension and run LIS
+            int[] secondDim = new int[envelopes.length];
+            for (int i = 0; i < envelopes.length; ++i) secondDim[i] = envelopes[i][1];
+            return lengthOfLIS(secondDim);
+        }
+
+        //dp[i] 表示以 nums[i] 这个数结尾的最长递增子序列的长度
+        //dp[i] = max(dp[i], dp[j] + 1) for j in [0, i)；只要之前的数都小于i就加入计算
+        public int lengthOfLIS(int[] nums) {
+            int[] dp = new int[nums.length];
+            // base case：dp 数组全都初始化为 1
+            Arrays.fill(dp, 1);
+            for (int i = 0; i < nums.length; i++) {
+                for (int j = 0; j < i; j++) {
+                    if (nums[i] > nums[j])
+                        dp[i] = Math.max(dp[i], dp[j] + 1);
+                }
+            }
+
+            int res = 0;
+            for (int i = 0; i < dp.length; i++) {
+                res = Math.max(res, dp[i]);
+            }
+            return res;
+        }
+
+        //扑克牌的堆数
+        public int lengthOfLISOld(int[] nums) {
+            int[] dp = new int[nums.length];
+            int len = 0;
+            for (int num : nums) {
+                //获取排序后的index
+                int i = Arrays.binarySearch(dp, 0, len, num);
+                //index为-1 说明没找到，i=0
+                if (i < 0) {
+                    i = -(i + 1);
+                }
+                //将dp0设置为num，
+                dp[i] = num;
+                if (i == len) {
+                    len++;
+                }
+            }
+            return len;
+        }
     }
 
     //三角形最小路径和
