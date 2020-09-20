@@ -9,6 +9,14 @@ public class ArraySortProblem {
         int[] nums = new int[]{1, 32, 1, 2, 4, 5, 6, 0, 19};
         System.out.println(new findKthLargestSolution().findKthLargest2(nums, 2));
     }
+
+    //TODO 矩阵中的最长递增路径
+    class longestIncreasingPathSolution {
+        public int longestIncreasingPath(int[][] matrix) {
+            return -1;
+        }
+    }
+
     // 接雨水
     //最两端的列不用考虑，因为一定不会有水。所以下标从 1 到 length - 2
 //    注意雨水单位计算方式是该列左右两边最高的墙中 选择一个较矮的高度-当前列高度就是该列积累的雨水
@@ -104,7 +112,7 @@ public class ArraySortProblem {
             int[] visited = new int[M.length];
             int count = 0;
             //队列
-            Queue < Integer > queue = new LinkedList < > ();
+            Queue<Integer> queue = new LinkedList<>();
             //横向入队
             for (int i = 0; i < M.length; i++) {
                 if (visited[i] == 0) {
@@ -139,6 +147,7 @@ public class ArraySortProblem {
                 }
             }
         }
+
         //深度遍历
         public int findCircleNum(int[][] M) {
             //设置访问过的数组
@@ -441,6 +450,7 @@ public class ArraySortProblem {
             return ans;
         }
     }
+
     //搜索旋转数组
     class searchSolution {
         public int search(int[] nums, int target) {
