@@ -8,6 +8,56 @@ public class dpProblem {
 
     public static void main(String[] args) {
         // write your code here
+        System.out.println(new numberOfWaysSolution().numberOfWays(6));
+    }
+
+
+    //不相交的握手
+    static class numberOfWaysSolution {
+        int[] memo; // 记忆数组
+
+        public int numberOfWays2(int num_people) {
+            memo = new int[1 + num_people]; // 初始化记忆数组
+            return (int) help(num_people); // 递归求解
+        }
+
+        long help(int num_people) {
+            // 如果记忆数组存在值，直接发挥
+            if (memo[num_people] > 0) {
+                return memo[num_people];
+            }
+            // 如果总人数小于等于2，返回1
+            if (num_people <= 2) return 1;
+            // 返回结果
+            long res = 0;
+            // 从相邻人开始循环可能握手的人（相隔人数为偶数）
+            for (int i = 1; i < num_people; i += 2) {
+                // 握手后将人分为两部分，两部分递归求解的乘积加入返回结果
+                res += (help(i - 1) * help(num_people - i - 1)) % 1000000007;
+            }
+            // 将结果存入记忆数组
+            memo[num_people] = (int) (res % 1000000007);
+            return memo[num_people];
+        }
+
+        public int numberOfWays(int num_people) {
+            if (num_people == 2) return 1;
+            int mod = (int) (Math.pow(10, 9) + 7);
+            // dp[i] 表示 i 个人的不会相交的握手方案数
+            long[] dp = new long[num_people + 1];
+            dp[0] = dp[1] = 0;  // 一个人或者没有人无法握手
+            dp[2] = 1;  // 两个人只有一种握手
+            //从i表示人数，遍历不同人数的握手方案
+            for (int i = 3; i <= num_people; i++) {
+                long sum = 0;
+                //表示和第k个人握手后的握手方案，
+                for (int k = 4; k <= i - 2; k += 2) {
+                    sum += (dp[k - 2] * dp[i - k]) % mod;
+                }
+                dp[i] = (2 * dp[i - 2] % mod + sum) % mod;
+            }
+            return (int) (dp[num_people] % mod);
+        }
     }
 
     //俄罗斯套娃
