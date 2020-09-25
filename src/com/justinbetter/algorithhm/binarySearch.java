@@ -7,8 +7,10 @@ public class binarySearch {
     public static void main(String[] args) {
         // write your code here
         int number = 2;
-        System.out.println(mySqrt2(number, 0.0001));
-        System.out.println(SqrtByNewton(number, 0.001));
+//        System.out.println(mySqrt2(number, 0.0001));
+//        System.out.println(SqrtByNewton(number, 0.001));
+        int[] nums = {1, 3, 6, 10};
+        System.out.println(new binarySearch().binary_searchHj1(nums, 10));
     }
 
     //√2 = 1.41421
@@ -27,7 +29,7 @@ public class binarySearch {
             lastMid = mid;
             mid = (left + right) / 2.0;
         }
-        return  mid;
+        return mid;
 //        DecimalFormat df = new DecimalFormat("0.00");
 //        return df.format(mid);
     }
@@ -62,6 +64,22 @@ public class binarySearch {
         }
         return ans;
 
+    }
+
+    int binary_searchHj1(int[] nums, int target) {
+        int left = 0;
+        int right = nums.length - 1;
+        while (left <= right) {
+            int mid = left + ((right - left) >> 1);
+            if (nums[mid] < target) {
+                left = mid + 1;
+            } else if (nums[mid] > target) {
+                right = mid - 1;
+            } else {
+                return mid;
+            }
+        }
+        return -1;
     }
 
     int binary_search(int[] nums, int target) {
