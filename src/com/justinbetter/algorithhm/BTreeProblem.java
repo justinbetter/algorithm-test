@@ -15,6 +15,32 @@ public class BTreeProblem {
         // write your code here
     }
 
+    //二叉树的最大长度
+    class diameterOfBinaryTreeSolution {
+        //dfs
+        //递归节点深度，如果节点为null 说明到底了 返回深度0
+        //深度max L R, + 1根节点
+        //遍历的节点数-1 就是路径的长度
+        int ans = 0;
+
+        public int diameterOfBinaryTree(TreeNode root) {
+            //深度遍历，遍历的节点数-1就是最大长度
+            ans = 1;
+            depth(root);
+            return ans - 1;
+        }
+
+        int depth(TreeNode node) {
+            if (node == null) {
+                return 0;
+            }
+            int L = depth(node.left);
+            int R = depth(node.right);
+            ans = Math.max(ans, L + R + 1);
+            return Math.max(L, R) + 1;
+        }
+    }
+
     //验证二叉树是否是bst
     class isValidBSTSolution {
         public boolean isValidBST(TreeNode root) {
@@ -23,10 +49,16 @@ public class BTreeProblem {
 
         public boolean check(TreeNode root, TreeNode min, TreeNode max) {
             // 空树认为是BST
-            if (root == null) { return true; }
+            if (root == null) {
+                return true;
+            }
             // 一次只检查一个节点，看这个节点是否破坏了BST特性
-            if (min != null && root.val <= min.val) { return false; }
-            if (max != null && root.val >= max.val) { return false; }
+            if (min != null && root.val <= min.val) {
+                return false;
+            }
+            if (max != null && root.val >= max.val) {
+                return false;
+            }
             // 对于左子树的所有节点值来说，最小值为min，最大值为root
             // 对于右子树的所有节点值来说，最小值为root，最大值为max
             return check(root.left, min, root) && check(root.right, root, max);
