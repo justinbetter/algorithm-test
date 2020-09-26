@@ -12,6 +12,8 @@ public class ArraySortProblem {
 
     //矩阵中的最长递增路径
     class longestIncreasingPathSolution {
+        //深度优先遍历+备忘录
+        //获取行列，深度遍历,记录ans 是最大的row column
         public int[][] dirs = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
         public int rows, columns;
 
@@ -32,6 +34,9 @@ public class ArraySortProblem {
         }
 
         public int dfs(int[][] matrix, int row, int column, int[][] memo) {
+            //备忘录
+            //行列开始移动，设置newRow newColumn
+            //记录最大递增序列： 0<新行<行数 0<新列<列数 新值 > column
             //表示记录过了
             if (memo[row][column] != 0) {
                 return memo[row][column];
