@@ -6,8 +6,50 @@ public class StringProblem {
 
     public static void main(java.lang.String[] args) {
         // write your code here
-        System.out.println(lengthOfLongestSubstring("aaabcssds"));
+        String s1 = "abcabcdssds";
+        String s2 = "asdaabcdasd";
+
+        System.out.println(new longestCommonSubsequenceSolution().longestCommonSubsequence2(s1, s2));
     }
+
+    static class longestCommonSubsequenceSolution {
+        //dp[i][j]的含义是，在必须把str1[i]和str2[j]当作公共子串最后一个字符的情况下，公共子串最长能有多长
+        //遍历dp找到最大值及其位置，最长公共子串自然可以得到
+        public String longestCommonSubsequence2(String text1, String text2) {
+            char[] char1 = text1.toCharArray();
+            char[] char2 = text2.toCharArray();
+            int len1 = char1.length;
+            int len2 = char2.length;
+            int[][] dp = new int[len1][len2];
+            int end = 0;
+            int max = 0;
+            //dp[0][0] = 0; int 默认是0
+            for (int i = 0; i < len1; i++) {
+                if (char1[i] == char2[0]) {
+                    dp[i][0] = 1;
+                }
+            }
+            for (int j = 0; j < len2; j++) {
+                if (char2[j] == char1[0]) {
+                    dp[0][j] = 1;
+                }
+            }
+            for (int i = 1; i < len1; i++) {
+                for (int j = 1; j < len2; j++) {
+                    if (char1[i] == char2[j]) {
+                        dp[i][j] = dp[i - 1][j - 1] + 1;
+                        if (dp[i][j] > max) {
+                            end = i;
+                            max = dp[i][j];
+                        }
+                    }
+                }
+            }
+//            return max;
+            return text1.substring(end - max + 1, end + 1);
+        }
+    }
+
 
     //复原IP地址
     class restoreIpAddressesSolution {

@@ -10,6 +10,50 @@ public class ArraySortProblem {
         System.out.println(new findKthLargestSolution().findKthLargest2(nums, 2));
     }
 
+    //螺旋矩阵
+    class spiralOrderSolution {
+        //重点是变更方向
+        // 设定上下左右边界，边界交错就截止
+        public List<Integer> spiralOrder(int[][] matrix) {
+            List<Integer> res = new LinkedList<>();
+            if (matrix.length == 0) {
+                return res;
+            }
+            //初始上下左右
+            int up = 0, down = matrix.length - 1, left = 0, right = matrix[0].length - 1;
+            while (true) {
+                //左右遍历
+                for (int col = left; col <= right; ++col) {
+                    res.add(matrix[up][col]);
+                }
+                //上边界+1 如果超过down，边界交错，遍历结束
+                if (++up > down) {
+                    break;
+                }
+                for (int row = up; row <= down; ++row) {
+                    res.add(matrix[row][right]);
+                }
+                if (--right < left) {
+                    break;
+                }
+                for (int col = right; col >= left; --col) {
+                    res.add(matrix[down][col]);
+                }
+                if (--down < up) {
+                    break;
+                }
+                for (int row = down; row >= up; --row) {
+                    res.add(matrix[row][left]);
+                }
+                if (++left > right) {
+                    break;
+                }
+            }
+            return res;
+        }
+    }
+
+
     //矩阵中的最长递增路径
     class longestIncreasingPathSolution {
         //深度优先遍历+备忘录
