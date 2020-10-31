@@ -1,5 +1,8 @@
 package com.justinbetter.algorithhm;
 
+import java.util.LinkedList;
+import java.util.List;
+
 public class BTreeProblem {
     public class TreeNode {
         int val;
@@ -13,6 +16,96 @@ public class BTreeProblem {
 
     public static void main(String[] args) {
         // write your code here
+    }
+
+    class HJSolution {
+        public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+            //思路：
+            //新建两个辅助node，保存倒序排列的l1 l2，不需要；因为题目本身就是逆序的
+            //循环两个node 直到最后一个节点
+            ListNode left = l1;
+            ListNode right = l2;
+            int carry = 0;
+            ListNode tmp = new ListNode(0);
+            ListNode res = tmp;
+            while(left != null || right != null) {
+                int x = (left == null) ? 0 : left.val;
+                int y = (right == null) ? 0 : right.val;
+                int sum = x + y +carry;
+                carry = sum / 10;
+                ListNode now = new ListNode(sum%10);
+                res.next = now;
+                res = res.next;
+                if (left != null) {left = left.next;}
+                if (right != null) {right = right.next;}
+            }
+            if (carry > 0) {
+                res.next = new ListNode(carry);
+            }
+            return tmp.next;
+
+
+        }
+        public List<Integer> preorderTraversal(TreeNode root) {
+            //stack
+            LinkedList<TreeNode> stack = new  LinkedList<>();
+            LinkedList<Integer> ans = new LinkedList<>();
+            if (root == null) {
+                return ans;
+            }
+            stack.push(root);
+            while(!stack.isEmpty()) {
+                TreeNode node = stack.poll();
+                ans.add(node.val);
+                if (node.right != null) {
+                    stack.push(node.right);
+                }
+                if (node.left != null) {
+                    stack.push(node.left);
+                }
+            }
+            return ans;
+
+        }
+        public List<Integer> _preorderTraversal(TreeNode root) {
+            LinkedList<TreeNode> stack = new LinkedList<>();
+            LinkedList<Integer> output = new LinkedList<>();
+            if (root == null) {
+                return output;
+            }
+
+            stack.add(root);
+            while (!stack.isEmpty()) {
+                TreeNode node = stack.pollLast();
+                output.add(node.val);
+                if (node.right != null) {
+                    stack.add(node.right);
+                }
+                if (node.left != null) {
+                    stack.add(node.left);
+                }
+            }
+            return output;
+        }
+
+        List<Integer> treeFirstSearch(TreeNode root) {
+            List<Integer> ans = new LinkedList<>();
+            if (root != null) {
+                ans.add(root.val);
+            }
+            TreeNode left = root.left;
+            TreeNode right = root.right;
+            while (left != null) {
+                ans.add(left.val);
+                left = left.left;
+            }
+
+            while (root.right != null) {
+
+            }
+            return ans;
+        }
+
     }
 
     //二叉树的最大长度

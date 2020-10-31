@@ -6,8 +6,63 @@ public class ArraySortProblem {
 
     public static void main(String[] args) {
         // write your code here
-        int[] nums = new int[]{1, 32, 1, 2, 4, 5, 6, 0, 19};
-        System.out.println(new findKthLargestSolution().findKthLargest2(nums, 2));
+//        int[] nums = new int[]{5, 7, 7, 8, 8, 10};
+        int[] nums = new int[]{2, 2};
+        System.out.println(new searchRangeSolution().searchRange(nums, 6));
+    }
+
+    //34. 在排序数组中查找元素的第一个和最后一个位置
+    static class searchRangeSolution {
+        public int[] searchRange(int[] nums, int target) {
+            //二分查找 left right mid
+            if (nums.length == 0) {
+                return new int[]{-1, -1};
+            }
+            int firstIndex = getPosition(nums, target);
+            int lastIndex = getLastPosition(nums, target);
+            return new int[]{firstIndex, lastIndex};
+
+        }
+
+        public int getPosition(int[] nums, int target) {
+            int left = 0;
+            int right = nums.length - 1;
+            while (left < right) {
+                int mid = left + ((right - left) >> 1);
+                if (nums[mid] > target) {
+                    right = mid - 1;
+                } else if (nums[mid] == target) {
+                    right = mid;
+                } else {
+                    left = mid + 1;
+                }
+            }
+            if (nums[left] == target) {
+                return left;
+            }
+            //没找到
+            return -1;
+        }
+
+        public int getLastPosition(int[] nums, int target) {
+            int left = 0;
+            int right = nums.length - 1;
+            while (left < right) {
+                int mid = left + ((right - left + 1) >> 1);
+                if (nums[mid] > target) {
+                    right = mid - 1;
+                } else if (nums[mid] == target) {
+                    left = mid;
+                } else {
+                    left = mid + 1;
+                }
+            }
+            if (left < nums.length && nums[left] == target) {
+                return left;
+            }
+
+            return -1;
+        }
     }
 
     //螺旋矩阵
