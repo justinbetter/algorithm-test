@@ -7,8 +7,39 @@ public class ArraySortProblem {
     public static void main(String[] args) {
         // write your code here
 //        int[] nums = new int[]{5, 7, 7, 8, 8, 10};
-        int[] nums = new int[]{2, 2};
-        System.out.println(new searchRangeSolution().searchRange(nums, 6));
+        int[] nums = new int[]{2,3,6,7};
+        System.out.println(new combinationSumSolution().combinationSum(nums, 7));
+    }
+
+   static class combinationSumSolution {
+        public List<List<Integer>> combinationSum(int[] candidates, int target) {
+            //回溯+深度遍历
+            List<List<Integer>> res = new ArrayList<>();
+            if (candidates.length == 0) {
+                return  res;
+            }
+            LinkedList<Integer> path = new LinkedList<>();
+            dfs(res,path,0,candidates,target);
+            return  res;
+        }
+        private void dfs(List<List<Integer>> res,LinkedList<Integer> path ,int index,int[] candidates,int target){
+            //结束条件
+            if (target < 0) {
+                return;
+            }
+            if (target == 0){
+                //这里需要new，不然深度遍历中撤销选择时候把这里也置空了
+                res.add(new ArrayList<>(path));
+                return;
+            }
+
+            for (int i=index;i < candidates.length;i++) {
+                path.addLast(candidates[i]);
+                dfs(res,path,i,candidates,target - candidates[i]);
+                path.removeLast();
+            }
+
+        }
     }
 
     //34. 在排序数组中查找元素的第一个和最后一个位置
