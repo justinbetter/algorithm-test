@@ -7,35 +7,74 @@ public class ArraySortProblem {
     public static void main(String[] args) {
         // write your code here
 //        int[] nums = new int[]{5, 7, 7, 8, 8, 10};
-        int[] nums = new int[]{2,3,6,7};
+        int[] nums = new int[]{2, 3, 6, 7};
         System.out.println(new combinationSumSolution().combinationSum(nums, 7));
     }
 
-   static class combinationSumSolution {
+    //    leetcode55 跳跃游戏
+    static class canJumpSolution {
+        public boolean canJump(int[] nums) {
+            //遍历判断 res为最远的地方 如果遍历中 发现有res >= nums.length,说明可以到达；否则return false；
+            int res = 0;
+            for (int i = 0; i < nums.length; i++) {
+                if (i <= res) { //能够到达的地方，不然没法到达
+                    res = Math.max(res, i + nums[i]);
+                    if (res >= (nums.length - 1)) {
+                        return true;
+                    }
+                }
+
+            }
+            return false;
+        }
+    }
+
+    static class groupAnagramsSolution {
+        public List<List<String>> groupAnagrams(String[] strs) {
+            //按照字母排序后的结果=key, 因此异位字母获取的key是相等的
+            HashMap<String, List<String>> map = new HashMap<>();
+            for (int i = 0; i < strs.length; i++) {
+                String strItem = strs[i];
+                char[] charArray = strItem.toCharArray();
+                Arrays.sort(charArray);
+                String _str = String.valueOf(charArray);
+                if (map.containsKey(_str)) {
+                    map.get(_str).add(strItem);
+                } else {
+                    map.put(_str, new ArrayList<>());
+                }
+            }
+            return new ArrayList<>(map.values());
+
+        }
+    }
+
+    static class combinationSumSolution {
         public List<List<Integer>> combinationSum(int[] candidates, int target) {
             //回溯+深度遍历
             List<List<Integer>> res = new ArrayList<>();
             if (candidates.length == 0) {
-                return  res;
+                return res;
             }
             LinkedList<Integer> path = new LinkedList<>();
-            dfs(res,path,0,candidates,target);
-            return  res;
+            dfs(res, path, 0, candidates, target);
+            return res;
         }
-        private void dfs(List<List<Integer>> res,LinkedList<Integer> path ,int index,int[] candidates,int target){
+
+        private void dfs(List<List<Integer>> res, LinkedList<Integer> path, int index, int[] candidates, int target) {
             //结束条件
             if (target < 0) {
                 return;
             }
-            if (target == 0){
+            if (target == 0) {
                 //这里需要new，不然深度遍历中撤销选择时候把这里也置空了
                 res.add(new ArrayList<>(path));
                 return;
             }
 
-            for (int i=index;i < candidates.length;i++) {
+            for (int i = index; i < candidates.length; i++) {
                 path.addLast(candidates[i]);
-                dfs(res,path,i,candidates,target - candidates[i]);
+                dfs(res, path, i, candidates, target - candidates[i]);
                 path.removeLast();
             }
 
