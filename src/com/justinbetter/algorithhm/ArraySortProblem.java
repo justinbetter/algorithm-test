@@ -11,6 +11,28 @@ public class ArraySortProblem {
         System.out.println(new combinationSumSolution().combinationSum(nums, 7));
     }
 
+    //LC 62 不同路径
+    class uniquePathsSolution {
+        public int uniquePaths(int m, int n) {
+            //dp[i][j] = dp[i-1][j] + dp[i][j-1]
+            //dp[i][j] 表示当前有多少路径
+            //边界只有1条路径
+            int[][] dp = new int[m][n];
+            for (int i = 0; i < m; i++) {
+                dp[i][0] = 1;
+            }
+            for (int i = 0; i < n; i++) {
+                dp[0][i] = 1;
+            }
+            for (int i = 1; i < m; i++) {
+                for (int j = 1; j < n; j++) {
+                    dp[i][j] = dp[i - 1][j] + dp[i][j - 1];
+                }
+            }
+            return dp[m - 1][n - 1];
+        }
+    }
+
     //    leetcode55 跳跃游戏
     static class canJumpSolution {
         public boolean canJump(int[] nums) {
