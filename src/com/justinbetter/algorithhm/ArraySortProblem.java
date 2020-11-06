@@ -11,6 +11,33 @@ public class ArraySortProblem {
         System.out.println(new combinationSumSolution().combinationSum(nums, 7));
     }
 
+    //LC64 最小路径和
+    class minPathSumSolution {
+        public int minPathSum(int[][] grid) {
+            //dp[i][j] = min(dp[i-1][j],dp[i][j-1])+grid[i][j]
+            int m = grid.length;
+            int n = grid[0].length;
+            int[][] dp = new int[m][n];
+            for (int i = 0; i < m; i++) {
+                for (int j = 0; j < n; j++) {
+                    if (i == 0 && j == 0) {
+                        dp[i][j] = grid[i][j];
+                        continue;
+                    }
+                    //边界上只有一条路径
+                    if (i == 0) {
+                        dp[i][j] = dp[i][j - 1] + grid[i][j];
+                    } else if (j == 0) {
+                        dp[i][j] = dp[i - 1][j] + grid[i][j];
+                    } else {
+                        dp[i][j] = Math.min(dp[i][j - 1], dp[i - 1][j]) + grid[i][j];
+                    }
+                }
+            }
+            return dp[m - 1][n - 1];
+        }
+    }
+
     //LC 62 不同路径
     class uniquePathsSolution {
         public int uniquePaths(int m, int n) {
