@@ -7,8 +7,74 @@ public class ArraySortProblem {
     public static void main(String[] args) {
         // write your code here
 //        int[] nums = new int[]{5, 7, 7, 8, 8, 10};
-        int[] nums = new int[]{2, 3, 6, 7};
-        System.out.println(new combinationSumSolution().combinationSum(nums, 7));
+        int[] nums = new int[]{1, 2, 3};
+        System.out.println(new subsetsSolution().subsets(nums));
+    }
+
+    //LC75 颜色分类 双指针解决
+    class sortColorsSolution {
+        public void sortColors(int[] nums) {
+            //双指针扫描:0交换头 2交换尾
+            int left = 0;
+            int right = nums.length;
+            int i = 0; //循环变量
+            while (i < right) {
+                int val = nums[i];
+                if (val == 0) { //和left交换
+                    swap(nums, left, i);
+                    i++;
+                    left++;
+                } else if (val == 1) {
+                    i++;
+                } else if (val == 2) { //和right交换
+                    right--;
+                    swap(nums, right, i);
+                }
+            }
+        }
+
+        private void swap(int[] nums, int left, int right) {
+            int temp = nums[left];
+            nums[left] = nums[right];
+            nums[right] = temp;
+        }
+    }
+
+    //LC76 字集
+    static class subsetsSolution {
+        public List<List<Integer>> subsets(int[] nums) {
+            //思路：回溯 dfs
+            int len = nums.length;
+            List<List<Integer>> res = new ArrayList<>();
+            List<Integer> path = new ArrayList<>();
+            dfs(0, res, path, len, nums);
+            return res;
+        }
+
+        private void dfs(int begin, List<List<Integer>> res, List<Integer> path, int len, int[] nums) {
+            res.add(new ArrayList(path));
+            for (int i = begin; i < len; i++) {
+                path.add(nums[i]);
+                dfs(i + 1, res, path, len, nums);
+                path.remove(path.size() - 1);
+            }
+        }
+
+        public List<List<Integer>> subsets2(int[] nums) {
+            List<List<Integer>> res = new ArrayList<>();
+            backtrack(0, nums, res, new ArrayList<Integer>());
+            return res;
+
+        }
+
+        private void backtrack(int i, int[] nums, List<List<Integer>> res, ArrayList<Integer> tmp) {
+            res.add(new ArrayList<>(tmp));
+            for (int j = i; j < nums.length; j++) {
+                tmp.add(nums[j]);
+                backtrack(j + 1, nums, res, tmp);
+                tmp.remove(tmp.size() - 1);
+            }
+        }
     }
 
     //LC64 最小路径和
