@@ -1,5 +1,7 @@
 package com.justinbetter.algorithhm;
 
+import java.util.ArrayList;
+import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -18,6 +20,41 @@ public class BTreeProblem {
         // write your code here
     }
 
+    //LC94 二叉树中序遍历
+    class inorderTraversalSolution {
+        public List<Integer> inorderTraversal(TreeNode root) {
+            //遍历根节点 左节点 右节点
+            List<Integer> res = new ArrayList<>();
+            traverse(root, res);
+            return res;
+        }
+
+        private void traverse(TreeNode root, List<Integer> res) {
+            if (root == null) return;
+            traverse(root.left, res);
+            res.add(root.val);
+            traverse(root.right, res);
+
+        }
+
+        public List<Integer> inorderTraversal2(TreeNode root) {
+            //迭代遍历
+            List<Integer> res = new ArrayList<>();
+            Deque<TreeNode> stack = new LinkedList<>();
+            while (root != null || !stack.isEmpty()) {
+                //压栈
+                while (root != null) {
+                    stack.push(root);
+                    root = root.left;
+                }
+                root = stack.pop();
+                res.add(root.val);
+                root = root.right;
+            }
+            return res;
+        }
+    }
+
     class HJSolution {
         public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
             //思路：
@@ -28,16 +65,20 @@ public class BTreeProblem {
             int carry = 0;
             ListNode tmp = new ListNode(0);
             ListNode res = tmp;
-            while(left != null || right != null) {
+            while (left != null || right != null) {
                 int x = (left == null) ? 0 : left.val;
                 int y = (right == null) ? 0 : right.val;
-                int sum = x + y +carry;
+                int sum = x + y + carry;
                 carry = sum / 10;
-                ListNode now = new ListNode(sum%10);
+                ListNode now = new ListNode(sum % 10);
                 res.next = now;
                 res = res.next;
-                if (left != null) {left = left.next;}
-                if (right != null) {right = right.next;}
+                if (left != null) {
+                    left = left.next;
+                }
+                if (right != null) {
+                    right = right.next;
+                }
             }
             if (carry > 0) {
                 res.next = new ListNode(carry);
@@ -46,15 +87,16 @@ public class BTreeProblem {
 
 
         }
+
         public List<Integer> preorderTraversal(TreeNode root) {
             //stack
-            LinkedList<TreeNode> stack = new  LinkedList<>();
+            LinkedList<TreeNode> stack = new LinkedList<>();
             LinkedList<Integer> ans = new LinkedList<>();
             if (root == null) {
                 return ans;
             }
             stack.push(root);
-            while(!stack.isEmpty()) {
+            while (!stack.isEmpty()) {
                 TreeNode node = stack.poll();
                 ans.add(node.val);
                 if (node.right != null) {
@@ -67,6 +109,7 @@ public class BTreeProblem {
             return ans;
 
         }
+
         public List<Integer> _preorderTraversal(TreeNode root) {
             LinkedList<TreeNode> stack = new LinkedList<>();
             LinkedList<Integer> output = new LinkedList<>();
