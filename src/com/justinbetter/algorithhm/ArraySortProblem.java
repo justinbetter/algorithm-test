@@ -11,6 +11,50 @@ public class ArraySortProblem {
         System.out.println(new subsetsSolution().subsets(nums));
     }
 
+    //LC 79 回溯dfs 设置visited 设置direction
+    class Solution {
+        public boolean exist(char[][] board, String word) {
+            //回溯判断 dfs是否等于字符，不符合返回上一状态
+            //设置标记
+            int m = board.length;
+            int n = board[0].length;
+            boolean[][] visited = new boolean[m][n];
+            //设置遍历方向
+            int[][] direction = new int[][]{{-1, 0}, {0, -1}, {1, 0}, {0, 1}};
+            for (int i = 0; i < m; i++) {
+                for (int j = 0; j < n; j++) {
+                    if (dfs(i, j, 0, direction, board, visited, word)) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        private boolean dfs(int i, int j, int start, int[][] direction, char[][] board, boolean[][] visited, String word) {
+            if (start == word.length() - 1) {
+                return board[i][j] == word.charAt(start);
+            }
+            if (board[i][j] == word.charAt(start)) {
+                visited[i][j] = true;
+                for (int k = 0; k < 4; k++) {
+                    int x = i + direction[k][0];
+                    int y = j + direction[k][1];
+                    //判断是否在边界,是否访问过
+                    if (x >= 0 && x < board.length && y >= 0 && y < board[0].length && !visited[x][y]) {
+                        boolean flag = dfs(x, y, start + 1, direction, board, visited, word);
+                        if (flag) {
+                            return true;
+                        }
+                    }
+                }
+                visited[i][j] = false;
+            }
+            return false;
+        }
+
+    }
+
     //LC75 颜色分类 双指针解决
     class sortColorsSolution {
         public void sortColors(int[] nums) {
