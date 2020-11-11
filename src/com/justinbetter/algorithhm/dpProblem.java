@@ -8,9 +8,126 @@ public class dpProblem {
 
     public static void main(String[] args) {
         // write your code here
-        System.out.println(new numberOfWaysSolution().numberOfWays(6));
+        char[][] grid = new char[][]{{'1', '1', '1', '1', '0'}, {'1', '1', '0', '1', '0'}, {'1', '1', '0', '0', '0'}, {'0', '0', '0', '0', '0'}};
+        System.out.println(new numIslandsSolution().numIslands(grid));
     }
 
+    static class numIslandsSolution {
+        boolean[][] visited;
+        int m;
+        int n;
+        int[][] direct = new int[][]{{-1, 0}, {0, -1}, {1, 0}, {0, 1}};
+        char[][] grid;
+        private static final int[][] DIRECTIONS = {{-1, 0}, {0, -1}, {1, 0}, {0, 1}};
+        private int rows;
+        private int cols;
+
+        public int numIslands(char[][] grid) {
+            //回溯 dfs visited direction
+            m = grid.length;
+            n = grid[0].length;
+//            visited = new boolean[m][n];
+//            int res = 0;
+//            grid = grid;
+//            if (m == 0) {
+//                return 0;
+//            }
+            rows = grid.length;
+            cols = grid[0].length;
+
+            this.grid = grid;
+            visited = new boolean[m][n];
+            int res = 0;
+            for (int i = 0; i < m; i++) {
+                for (int j = 0; j < n; j++) {
+                    // 如果是岛屿中的一个点，并且没有被访问过，就进行深度优先遍历
+                    if (!visited[i][j] && grid[i][j] == '1') {
+                        dfs(i, j);
+                        res++;
+                    }
+                }
+            }
+            return res;
+        }
+
+        public int numIslands2(char[][] grid) {
+            rows = grid.length;
+            if (rows == 0) {
+                return 0;
+            }
+            cols = grid[0].length;
+
+            this.grid = grid;
+            visited = new boolean[rows][cols];
+            int count = 0;
+            for (int i = 0; i < rows; i++) {
+                for (int j = 0; j < cols; j++) {
+                    // 如果是岛屿中的一个点，并且没有被访问过，就进行深度优先遍历
+                    if (!visited[i][j] && grid[i][j] == '1') {
+                        dfs(i, j);
+                        count++;
+                    }
+                }
+            }
+            return count;
+        }
+
+        /**
+         * 从坐标为 (i, j) 的点开始进行深度优先遍历
+         *
+         * @param i
+         * @param j
+         */
+        private void dfs(int i, int j) {
+            visited[i][j] = true;
+            for (int k = 0; k < 4; k++) {
+                int newX = i + DIRECTIONS[k][0];
+                int newY = j + DIRECTIONS[k][1];
+                // 如果不越界、还是陆地、没有被访问过
+                if (inArea(newX, newY) && grid[newX][newY] == '1' && !visited[newX][newY]) {
+                    dfs(newX, newY);
+                }
+            }
+        }
+
+        /**
+         * 封装成 inArea 方法语义更清晰
+         *
+         * @param x
+         * @param y
+         * @return
+         */
+        private boolean inArea(int x, int y) {
+            return x >= 0 && x < m && y >= 0 && y < n;
+        }
+
+//        private void dfsold(int i, int j, char[][] grid) {
+//            visited[i][j] = true;
+//            //开始移动
+//            for (int k = 0; k < 4; k++) {
+//                int x = i + direct[k][0];
+//                int y = j + direct[k][1];
+//                if (x >= 0 && x < m && y >= 0 && y < n && grid[x][y] == '1' && !visited[x][y]) {
+//                    dfs(x, y, grid);
+//                }
+//            }
+//
+//        }
+
+        private void dfs2(int i, int j) {
+            visited[i][j] = true;
+            for (int k = 0; k < 4; k++) {
+                int newX = i + direct[k][0];
+                int newY = j + direct[k][1];
+                // 如果不越界、还是陆地、没有被访问过
+                if (inArea(newX, newY) && grid[newX][newY] == '1' && !visited[newX][newY]) {
+                    dfs2(newX, newY);
+                }
+            }
+        }
+
+
+    }
 
     //不相交的握手
     static class numberOfWaysSolution {
