@@ -1,9 +1,6 @@
 package com.justinbetter.algorithhm;
 
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class BTreeProblem {
     public class TreeNode {
@@ -18,6 +15,53 @@ public class BTreeProblem {
 
     public static void main(String[] args) {
         // write your code here
+    }
+
+    //LC105 从前序中序遍历构造二叉树
+    class buildTreeSolution {
+
+        Map<Integer, Integer> indexRootMap;
+
+        public TreeNode buildTree(int[] preorder, int[] inorder) {
+            // add 1，traverse left , traverse Right
+            //通过前序遍历确定根节点，中序遍历确定左右紫薯
+            HashMap<Integer, Integer> map = new HashMap<>();
+            for (int i = 0; i < inorder.length; i++) {
+                map.put(inorder[i], i);
+            }
+            return buildSubTree(map, preorder, inorder, 0, preorder.length - 1, 0, inorder.length - 1);
+        }
+
+        private TreeNode buildSubTree(HashMap<Integer, Integer> map, int[] preorder, int[] inorder, int preLeft, int preRight, int inLeft, int inRight) {
+            //终止条件
+            if (preLeft > preRight || inLeft > inRight) {
+                return null;
+            }
+            //获取根节点
+            int rootValue = preorder[preLeft];
+            TreeNode root = new TreeNode(rootValue);
+            //获取左右节点
+            int indexInOrder = map.get(rootValue);
+            int nodeSize = indexInOrder - inLeft;
+            root.left = buildSubTree(map, preorder, inorder, preLeft + 1, preLeft + nodeSize, inLeft, inLeft + nodeSize);
+            root.right = buildSubTree(map, preorder, inorder, preLeft + nodeSize + 1, preRight, indexInOrder + 1, inRight);
+            return root;
+        }
+
+
+        TreeNode traverseBuild(int[] preorder, int[] inorder, int preLeft, int preRight, int inLeft, int inRight) {
+            if (preLeft > preRight) {
+                return null;
+            }
+            int rootValue = preorder[preLeft];
+            TreeNode root = new TreeNode(preorder[preLeft]);
+            //计算左子树节点数量
+            int rootIndex = indexRootMap.get(rootValue);
+            int nodeSize = rootIndex - inLeft;
+            root.left = traverseBuild(preorder, inorder, preLeft + 1, preLeft + nodeSize, inLeft, inLeft + nodeSize);
+            root.right = traverseBuild(preorder, inorder, preLeft + nodeSize + 1, preRight, rootIndex + 1, inRight);
+            return root;
+        }
     }
 
     //LC94 二叉树中序遍历
