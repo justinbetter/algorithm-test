@@ -7,9 +7,23 @@ public class ArraySortProblem {
     public static void main(String[] args) {
         // write your code here
 //        int[] nums = new int[]{5, 7, 7, 8, 8, 10};
-        int[] nums = new int[]{1, 2, 3};
-        System.out.println(new subsetsSolution().subsets(nums));
+        System.out.println(12%10);
+//        int[] nums = new int[]{1,2,3,4,5,6};
+//        rotateSolution.rotate(nums, 3);
     }
+
+    //LC189
+    static class rotateSolution {
+        public static void rotate(int[] nums, int k) {
+            int n = nums.length;
+            int[] newArr = new int[n];
+            for (int i = 0; i < n; ++i) {
+                newArr[(i + k) % n] = nums[i];
+            }
+            System.arraycopy(newArr, 0, nums, 0, n);
+        }
+    }
+
 
     //LC 79 回溯dfs 设置visited 设置direction
     class Solution {
