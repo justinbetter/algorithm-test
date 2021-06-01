@@ -1,6 +1,6 @@
 package com.justinbetter.algorithhm;
 
-public class ListNode1 {
+public class ListNodeProblem {
     static class ListNode {
         int val;
         ListNode next;
@@ -8,6 +8,45 @@ public class ListNode1 {
         ListNode(int x) {
             val = x;
         }
+    }
+
+    //回文链表
+    class isPalindromeSolution {
+
+        public boolean isPalindrome(ListNode head) {
+            //mine:反转右半边，和前一半一一比较
+            //快慢指针 找到中点，注意奇数
+            //注意起点别写错了，应该是一样的
+            ListNode slow = head;
+            ListNode fast = head;
+            while (fast != null && fast.next != null) {
+                slow = slow.next;
+                fast = fast.next.next;
+            }
+            if (fast != null) { //说明是奇数
+                slow = slow.next;
+            }
+            slow = reverse(slow);
+            fast = head;
+            //注意这里必须是slow != null
+            while (slow != null) {
+                if (fast.val != slow.val) {
+                    return false;
+                }
+                fast = fast.next;
+                slow = slow.next;
+            }
+            return true;
+        }
+
+        ListNode reverse(ListNode head) {
+            if (head == null || head.next == null) return head;
+            ListNode cur = reverse(head.next);
+            head.next.next = head;
+            head.next = null;
+            return cur;
+        }
+
     }
 
     static class Solution {

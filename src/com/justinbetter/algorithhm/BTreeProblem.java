@@ -221,6 +221,59 @@ public class BTreeProblem {
         }
     }
 
+    //层序遍历
+    public List<List<Integer>> levelOrder(TreeNode root) {
+        //queue add root while poll
+        List<List<Integer>> res = new ArrayList<>();
+        if (root == null) {
+            return res;
+        }
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.offer(root);
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            List<Integer> level = new ArrayList<>();
+            for (int i =0;i < size;i++) {
+                TreeNode node = queue.poll();
+                level.add(node.val);
+                if (node.left != null) {
+                    queue.offer(node.left);
+                }
+                if (node.right != null) {
+                    queue.offer(node.right);
+                }
+            }
+            res.add(level);
+        }
+        return res;
+
+    }
+
+    //LC108 升序数组转换为二叉树
+    class sortedArrayToBSTSolution {
+        public TreeNode sortedArrayToBST(int[] nums) {
+            //mine：dfs，判断左右相差；怎么转换为二叉树？
+            //other：主要是转换，因为是升序数组，所以递归取中间数，设置左右节点
+            if(nums.length == 0) {
+                return null;
+            }
+            return mySortBST(nums,0,nums.length-1);
+        }
+
+        TreeNode mySortBST(int[] nums,int start, int end) {
+            //end condition
+            if (start > end) {
+                return null;
+            }
+            int mid = (start + end) >> 1;
+            TreeNode node = new TreeNode(nums[mid]);
+            //关键：排除mid本身，不然会无限循环
+            node.left = mySortBST(nums,start,mid-1);
+            node.right = mySortBST(nums,mid+1,end);
+            return node;
+        }
+    }
+
     //验证二叉树是否是bst
     class isValidBSTSolution {
         public boolean isValidBST(TreeNode root) {
