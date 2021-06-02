@@ -11,6 +11,37 @@ public class ArraySortProblem {
 //        int[] nums = new int[]{1,2,3,4,5,6};
 //        rotateSolution.rotate(nums, 3);
     }
+    public ListNode reverseList(ListNode head) {
+        //迭代、递归，说白了都是引用指向
+        ListNode prev = null;
+        ListNode cur = head;
+        while (cur != null) {
+            ListNode next = cur.next;
+            cur.next = prev;
+            prev = cur;
+            cur = next;
+        }
+        //注意：这里返回新的pre节点，因为cur=null啦！
+        return prev;
+    }
+    //合并两个有序数组
+    class merge2Solution {
+        public void merge(int[] nums1, int m, int[] nums2, int n) {
+            //mine：双指针，比较大小，但是交换逻辑有点复杂；从后往前遍历比较，赋值
+            //other： 1. 增加额外数组 2. 直接放进尾部，对数组排序 3. 最后的从后往前放，谁大谁交换到后面
+            int i = m - 1;
+            int j = n -1;
+            int end = nums1.length -1;
+            while (j >= 0) {
+                if (i >= 0 && nums1[i] > nums2[j] ) {
+                    nums1[end--] = nums1[i--];
+                }else {
+                    // swap(nums2[j--],nums1[end--]);
+                    nums1[end--] = nums2[j--];
+                }
+            }
+        }
+    }
 
     //LC189
     static class rotateSolution {

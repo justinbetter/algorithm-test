@@ -17,6 +17,59 @@ public class BTreeProblem {
         // write your code here
     }
 
+    //LC543 二叉树直径
+    class diameterOfBinaryTreeSolution {
+
+        int max = 0;
+        public int diameterOfBinaryTree(TreeNode root) {
+            //mine: 递归， 左节点数量+右节点数量
+            //关键：/将每个节点最大直径(左子树深度+右子树深度)当前最大值比较并取大者
+            depth(root);
+            //注意：直径长度=节点数量-1
+            return max - 1;
+        }
+
+        int depth(TreeNode root) {
+            if (root == null) {
+                return 0;
+            }
+
+            int left = depth(root.left);
+            int right = depth(root.right);
+            //记录一下
+            max = Math.max(max,left+right+1);
+            //返回递归高度
+            return Math.max(left,right)+1;
+        }
+    }
+
+    ListNode reverseList(ListNode head) {
+        ListNode prev = null;
+        ListNode cur = head;
+        while (cur != null) {
+            ListNode next = cur.next;
+            cur.next = prev;
+            prev = cur;
+            cur = next;
+        }
+        return prev;
+    }
+
+    //LC226 翻转二叉树
+    public TreeNode invertTree(TreeNode root) {
+        //mine: 递归，左右互换
+        if (root == null) {
+            return null;
+        }
+        //关键：反转左边，反转右边
+        TreeNode left = invertTree(root.left);
+        TreeNode right = invertTree(root.right);
+        //关键2:将赋值的引用设置为当前左右节点
+        root.left = right;
+        root.right = left;
+        return root;
+    }
+
     //LC105 从前序中序遍历构造二叉树
     class buildTreeSolution {
 
@@ -195,31 +248,6 @@ public class BTreeProblem {
 
     }
 
-    //二叉树的最大长度
-    class diameterOfBinaryTreeSolution {
-        //dfs
-        //递归节点深度，如果节点为null 说明到底了 返回深度0
-        //深度max L R, + 1根节点
-        //遍历的节点数-1 就是路径的长度
-        int ans = 0;
-
-        public int diameterOfBinaryTree(TreeNode root) {
-            //深度遍历，遍历的节点数-1就是最大长度
-            ans = 1;
-            depth(root);
-            return ans - 1;
-        }
-
-        int depth(TreeNode node) {
-            if (node == null) {
-                return 0;
-            }
-            int L = depth(node.left);
-            int R = depth(node.right);
-            ans = Math.max(ans, L + R + 1);
-            return Math.max(L, R) + 1;
-        }
-    }
 
     //层序遍历
     public List<List<Integer>> levelOrder(TreeNode root) {
