@@ -17,6 +17,26 @@ public class BTreeProblem {
         // write your code here
     }
 
+
+    //LC617 合并二叉树
+    public TreeNode mergeTrees(TreeNode root1, TreeNode root2) {
+        //mine：递归，将节点值相加
+        if (root1 == null && root2 == null) {
+            return null;
+        }
+
+        if (root1 == null) {return root2;}
+        if (root2 == null) {return root1;}
+
+        TreeNode newNode= new TreeNode(root1.val+root2.val);
+        TreeNode left = mergeTrees(root1.left,root2.left);
+        TreeNode right = mergeTrees(root1.right,root2.right);
+        newNode.left = left;
+        newNode.right = right;
+        return newNode;
+
+    }
+
     //LC543 二叉树直径
     class diameterOfBinaryTreeSolution {
 

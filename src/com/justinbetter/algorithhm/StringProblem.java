@@ -12,6 +12,93 @@ public class StringProblem {
         System.out.println(new longestCommonSubsequenceSolution().longestCommonSubsequence2(s1, s2));
     }
 
+    //LC438 找到子字符串中的异位词（双指针、滑动窗口）
+    class Solution {
+        public List<Integer> findAnagrams(String s, String p) {
+            //mine：没想到
+            //other：双指针构造滑动窗口，ans返回的条件有两个：
+            //1. 当前字母的数组值和异位词数量相等；2. 同时窗口长度要和异位词相等
+            char[] arrS = s.toCharArray();
+            char[] arrP = p.toCharArray();
+
+            // 接收最后返回的结果
+            List<Integer> ans = new ArrayList<>();
+
+            // 定义一个 needs 数组来看 arrP 中包含元素的个数
+            int[] needs = new int[26];
+            // 定义一个 window 数组来看滑动窗口中是否有 arrP 中的元素，并记录出现的个数
+            int[] window = new int[26];
+
+            // 先将 arrP 中的元素保存到 needs 数组中
+            for (int i = 0; i < arrP.length; i++) {
+                needs[arrP[i] - 'a'] += 1;
+            }
+
+            // 定义滑动窗口的两端
+            int left = 0;
+            int right = 0;
+
+            // 右窗口开始不断向右移动
+            while (right < arrS.length) {
+                int curR = arrS[right] - 'a';
+                right++;
+                // 将右窗口当前访问到的元素 curR 个数加 1
+                window[curR] += 1;
+
+                // 当 window 数组中 curR 比 needs 数组中对应元素的个数要多的时候就该移动左窗口指针
+                while (window[curR] > needs[curR]) {
+                    int curL = arrS[left] - 'a';
+                    left++;
+                    // 将左窗口当前访问到的元素 curL 个数减 1
+                    window[curL] -= 1;
+                }
+
+                // 这里将所有符合要求的左窗口索引放入到了接收结果的 List 中
+                if (right - left == arrP.length) {
+                    ans.add(left);
+                }
+            }
+            return ans;
+        }
+    }
+
+
+    //LC394 字符串解码
+    class decodeStringSolution {
+        public String decodeString(String s) {
+            //mine: 根据要求解码，判断数字 Character.isDigital()，循环数字后的字母
+            //问题是嵌套处理，如果再次遇到数字
+            //other: 利用栈数据结构，关键是[入栈，]出栈
+            LinkedList<Integer> stack_nums = new LinkedList<>();
+            LinkedList<String> stack_strings = new LinkedList<>();
+
+            StringBuilder res = new StringBuilder();
+            int multi = 0;
+            char[] chars = s.toCharArray();
+            for (char c : chars) {
+                if (c == '[') {
+                    stack_nums.addLast(multi);
+                    stack_strings.addLast(res.toString());
+                    multi = 0;
+                    res  =  new StringBuilder();
+                }else if (c == ']') {
+                    StringBuilder temp = new StringBuilder();
+                    int num = stack_nums.removeLast();
+                    for (int i=0; i < num;i++) {
+                        temp.append(res.toString());
+                    }
+                    res = new StringBuilder(stack_strings.removeLast()+temp);
+
+                }else if (c >= '0' && c <= '9') {
+                    multi = multi*10 + Integer.parseInt(c+"");
+                }else {
+                    res.append(c);
+                }
+            }
+            return res.toString();
+        }
+    }
+
     static class longestCommonSubsequenceSolution {
         //dp[i][j]的含义是，在必须把str1[i]和str2[j]当作公共子串最后一个字符的情况下，公共子串最长能有多长
         //遍历dp找到最大值及其位置，最长公共子串自然可以得到

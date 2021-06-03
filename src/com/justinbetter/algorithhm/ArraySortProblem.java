@@ -11,6 +11,165 @@ public class ArraySortProblem {
 //        int[] nums = new int[]{1,2,3,4,5,6};
 //        rotateSolution.rotate(nums, 3);
     }
+
+
+    //LC287 寻找（时间换空间的）重复数
+    class findDuplicateSolution {
+        public int findDuplicate(int[] nums) {
+            //mine：首先想到hash表存储，但是这里有限制，所以要用二分法
+            //other：通过抽屉原理：10个苹果放9个抽屉，因为这里范围是[1,n]
+            //所以设置mid，把mid前的数量加起来发现 count > mid 说明重复数大概率在left,mid中
+            //因为是重复数，重复了才会超过mid
+
+            //注意：left = 1！
+            int left = 1;
+            int right = nums.length -1;
+
+            //二分法
+            while (left < right) {
+                // int mid = (left + right) >> 2;
+                int mid = left + (right - left)/2;
+                int count = 0;
+                for (int num : nums) {
+                    if (num <= mid) {
+                        count++;
+                    }
+                }
+
+                if (count > mid) {
+                    right = mid;
+                }else {
+                    left = mid+1;
+                }
+            }
+            return left;
+
+        }
+    }
+
+    //LC253 会议室时间安排数量
+    class minMeetingRoomsSolution {
+
+        public int minMeetingRooms(int[][] intervals) {
+            //mine：判断有没有冲突，但是代码怎么写？数组首先看看能不能排序
+            //other：把开始时间和结束时间放在一起排序，开始时间+1，结束时间-1
+            //或者1. 先按照开始时间升序排列，2. 使用优先队列，将结束时间放入堆中,和开始时间比较
+
+            List<int[]> list = new ArrayList<>();
+            for (int i=0;i< intervals.length;i++) {
+                list.add(new int[]{intervals[i][0],1});
+                list.add(new int[]{intervals[i][1],-1});
+            }
+            Collections.sort(list,(a,b)->{
+                if(a[0] == b[0]) {
+                    return a[1] - b[1];
+                }
+                return a[0]-b[0];
+            });
+            int res = 0;
+            int cur = 0;
+            for (int i=0; i < list.size(); i++) {
+                int[] array = list.get(i);
+                cur += array[1];
+                res = Math.max(res,cur);
+            }
+            return res;
+
+        }
+
+        // 或者1. 先按照开始时间升序排列，2. 使用优先队列，将结束时间放入堆中,和开始时间比较
+        public int minMeetingRooms3(int[][] intervals) {
+            if(intervals.length == 0) return 0;
+            Arrays.sort(intervals,Comparator.comparingInt(o->o[0]));
+            PriorityQueue<Integer> minHeap = new PriorityQueue<>();
+            int rooms = 0;
+            for(int i=0; i<intervals.length; i++) {
+                minHeap.offer(intervals[i][1]);
+                if (intervals[i][0] < minHeap.peek()) {
+                    rooms ++;
+                } else {
+                    minHeap.poll();
+                }
+            }
+            return rooms;
+        }
+
+    }
+
+    public int findKthLargest(int[] nums, int k) {
+        //mine：使用优先队列，最小堆，将len-k poll出来，剩下就是ans
+        int len = nums.length;
+        PriorityQueue<Integer> queue = new PriorityQueue<>(len,(a,b)->(a-b));
+        for (int i = 0 ; i < len; i++) {
+            queue.offer(nums[i]);
+        }
+
+        for (int i=0; i < len - k; i++) {
+            queue.poll();
+        }
+
+        return queue.peek();
+    }
+
+    //LC240 搜索升序的二维矩阵
+    class searchMatrixSolution {
+        public boolean searchMatrix(int[][] matrix, int target) {
+            //mine: 二分法，行，列
+            //other：利用该矩阵升序性质，从左下角为起点搜索
+            //如果当前>目标值，行--；当前< 目标值，列++；
+            int row  = matrix.length -1;
+            int column = 0;
+
+            while(row >=0 && column < matrix[0].length) {
+                if (matrix[row][column] > target) {
+                    row--;
+                }else if (matrix[row][column] < target) {
+                    column++;
+                }else{
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
+
+    //LC207 课程表 有向无环图 拓扑排序；
+    class canFinishSolution {
+        public boolean canFinish(int numCourses, int[][] prerequisites) {
+            //有向无环图，拓扑排序
+            //入度表：指有向图中某点作为图中边的终点的次数之和。
+            //每次都选取入度为 0 的点加入拓扑队列中，再删除与这一点连接的所有边。
+            int[] indegrees = new int[numCourses];
+            //邻接表：用于存储图
+            List<List<Integer>> adjacency = new ArrayList<>();
+            Queue<Integer> queue = new LinkedList<>();
+            for (int i=0; i < numCourses;i++) {
+                adjacency.add(new ArrayList<>());
+            }
+
+            //获取课程的入度和邻接表
+            for(int[] cp : prerequisites) {
+                indegrees[cp[0]]++;
+                adjacency.get(cp[1]).add(cp[0]);
+            }
+
+            //获取入度为0的课程
+            for(int i = 0; i < numCourses; i++)
+                if(indegrees[i] == 0) queue.add(i);
+
+            // BFS TopSort.
+            while(!queue.isEmpty()) {
+                int pre = queue.poll();
+                numCourses--;
+                for(int cur : adjacency.get(pre))
+                    if(--indegrees[cur] == 0) queue.add(cur);
+            }
+
+            return numCourses == 0;
+        }
+    }
+
+
     public ListNode reverseList(ListNode head) {
         //迭代、递归，说白了都是引用指向
         ListNode prev = null;
