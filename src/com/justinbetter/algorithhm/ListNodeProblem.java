@@ -10,6 +10,8 @@ public class ListNodeProblem {
         }
     }
 
+h
+
     //回文链表
     class isPalindromeSolution {
 

@@ -12,6 +12,120 @@ public class dpProblem {
         System.out.println(new numIslandsSolution().numIslands(grid));
     }
 
+    //LC494 目标和(数组加起来等于target的方法数量）
+    class findTargetSumWaysSolution {
+        public int findTargetSumWays(int[] nums, int target) {
+            //mine： dfs，递归判断，输出最后结果=0的分支
+            //other: 动态规划，返回记录的方法数目
+            //假设所有符号为+的元素和为subSum，符号为-的元素和的绝对值就是sum - subSum
+            // 我们想要的 target = 正数和 - 负数和 = subSum - (sum - subSum)
+            // 可以求出 subSum = (target + sum) / 2
+            // 于是转化成了求容量为subSum的01背包问题
+
+            //dp[j] = dp[j] + dp[j - num]
+            //当前填满容量为j的包的方法数 = 之前填满容量为j的包的方法数 + 之前填满容量为j - num的包的方法数
+            int sum = 0;
+            for(int num : nums) sum += num;
+            //大于sum，不可能实现，返回0
+            //不是偶数，不可能实现，返回0
+            if(target > sum || (target + sum) % 2 == 1) return 0;
+
+            //获取子元素和
+            int subSum = (target + sum) / 2;
+            int[] dp = new int[subSum + 1];
+            dp[0] = 1;
+            for(int num : nums){
+                for(int j = subSum; j >= num; j--){
+                    dp[j] = dp[j] + dp[j - num];
+                }
+            }
+            return dp[subSum];
+        }
+    }
+
+    //LC416 分割等和子集（判断是否分割数组为两个元素和相等的子集）
+    class canPartitionSolution {
+        public boolean canPartition(int[] nums) {
+            //mine：知道是背包问题，但是没思路
+            //other： 首先2个子数组的元素和相等可知背包的总量为sum/2，
+            //dp[i][j] = dp[i - 1][j] || dp[i - 1][j - nums[i]]
+
+            int len = nums.length;
+            // 题目已经说非空数组，可以不做非空判断
+            int sum = 0;
+            for (int num : nums) {
+                sum += num;
+            }
+            // 特判：如果是奇数，就不符合要求
+            if ((sum & 1) == 1) {
+                return false;
+            }
+
+            int target = sum / 2;
+            // 创建二维状态数组，行：物品索引，列：容量（包括 0）
+            boolean[][] dp = new boolean[len][target + 1];
+
+            // 优化1: 初始化成为 true 虽然不符合状态定义，但是从状态转移来说是完全可以的
+            // dp[0][0] = true;
+
+            // 先填表格第 0 行，第 1 个数只能让容积为它自己的背包恰好装满
+            if (nums[0] <= target) {
+                dp[0][nums[0]] = true;
+            }
+            // 再填表格后面几行
+            for (int i = 1; i < len; i++) {
+                for (int j = 0; j <= target; j++) {
+                    // 直接从上一行先把结果抄下来，然后再修正
+                    dp[i][j] = dp[i - 1][j];
+
+                    if (nums[i] == j) {
+                        dp[i][j] = true;
+                        continue;
+                    }
+                    if (nums[i] < j) {
+                        dp[i][j] = dp[i - 1][j] || dp[i - 1][j - nums[i]];
+                    }
+                    //优化1: 由于状态转移方程的特殊性，提前结束，可以认为是剪枝操作
+                    // if (dp[i][target]) {
+                    //      return true;
+                    // }
+                }
+            }
+            return dp[len - 1][target];
+        }
+    }
+
+    public class canPartitionSolution2 {
+
+        public boolean canPartition(int[] nums) {
+            int len = nums.length;
+            int sum = 0;
+            for (int num : nums) {
+                sum += num;
+            }
+            if ((sum & 1) == 1) {
+                return false;
+            }
+
+            int target = sum / 2;
+            boolean[] dp = new boolean[target + 1];
+            dp[0] = true;
+
+            if (nums[0] <= target) {
+                dp[nums[0]] = true;
+            }
+            for (int i = 1; i < len; i++) {
+                for (int j = target; nums[i] <= j; j--) {
+                    if (dp[target]) {
+                        return true;
+                    }
+                    dp[j] = dp[j] || dp[j - nums[i]];
+                }
+            }
+            return dp[target];
+        }
+    }
+
     static class numIslandsSolution {
         boolean[][] visited;
         int m;

@@ -12,6 +12,146 @@ public class StringProblem {
         System.out.println(new longestCommonSubsequenceSolution().longestCommonSubsequence2(s1, s2));
     }
 
+    //LC22 括号生成
+    class generateParenthesisSolution {
+        public List<String> generateParenthesis(int n) {
+            //DFS , res 判断剩余的左右括号是否满足
+            List<String> res = new ArrayList<>();
+            //执行深度优先遍历，搜索可能的结果
+            dfs("",n,n,res);
+            return res;
+        }
+        public void dfs(String temp,int left,int right,List<String> res){
+            //在递归终止的时候，直接把它添加到结果集即可
+            if (left == 0 && right == 0) {
+                res.add(temp);
+            }
+
+            // 剪枝（左括号可以使用的个数严格大于右括号可以使用的个数，才剪枝，注意这个细节）
+            if (left > right) {
+                return;
+            }
+            if (left > 0) {
+                dfs(temp+"(",left-1,right,res);
+            }
+            if (right > 0) {
+                dfs(temp+")",left,right-1,res);
+            }
+        }
+
+    }
+
+    class isValidSolution {
+
+        private final Map<Character,Character> map = new HashMap<Character,Character> (){
+            {
+                put('}','{');
+                put(']','[');
+                put(')','(');
+            }
+        };
+        public boolean isValid(String s) {
+            //辅助栈
+            Stack<Character> stack = new Stack<Character>();
+
+            for (int i =0; i < s.length(); i++) {
+                char c = s.charAt(i);
+                if (this.map.containsKey(c)) {
+                    char topElement  = stack.isEmpty()? '#' : stack.pop();
+                    if (topElement != this.map.get(c)) {
+                        return false;
+                    }
+
+                }else {
+                    stack.push(c);
+                }
+            }
+            return stack.isEmpty();
+
+        }
+    }
+
+    class letterCombinationsSolution {
+        List<String> res = new ArrayList<String>();
+        Map<Character, String> phoneMap = new HashMap<Character, String>() {{
+            put('2', "abc");
+            put('3', "def");
+            put('4', "ghi");
+            put('5', "jkl");
+            put('6', "mno");
+            put('7', "pqrs");
+            put('8', "tuv");
+            put('9', "wxyz");
+        }};
+        public List<String> letterCombinations(String digits) {
+            //回溯
+            if (digits.length() == 0) {
+                return res;
+            }
+            backTrack(digits,new StringBuffer(),0);
+            return res;
+        }
+        public void backTrack(String digits,StringBuffer combination,int index) {
+            if (index == digits.length()) {
+                res.add(combination.toString());
+            }else {
+                Character _char = digits.charAt(index);
+                String letters = phoneMap.get(_char);
+                for (int i=0; i< letters.length();i++) {
+                    combination.append(letters.charAt(i));
+                    backTrack(digits,combination,index+1);
+                    combination.deleteCharAt(index);
+                }
+            }
+        }
+    }
+
+    class longestPalindromeSolution {
+        public String longestPalindrome(String s) {
+            //P(i,j)=P(i+1,j−1) S[i] = S[j]
+            //动态规划：定义状态 子串是否为回文
+            //状态转移: 头尾字符相等、边界情况考虑转移
+            //考虑输出  d[i][j] =  true
+            //考虑状态压缩
+            int len = s.length();
+            if (len < 2) {
+                return s;
+            }
+            boolean[][] dp = new boolean[len][len];
+
+            for (int i=0;i < len; i++) {
+                dp[i][i] = true;
+            }
+
+            int  maxLen = 1;
+            int start = 0;
+
+            for (int j = 1; j < len; j++) {
+                for (int i = 0; i < j; i++) {
+                    if (s.charAt(i) == s.charAt(j)) {
+                        if (j - i < 3) {
+                            dp[i][j] = true;
+                        } else{
+                            dp[i][j] = dp[i+1][j -1];
+                        }
+                    } else {
+                        dp[i][j] = false;
+                    }
+
+                    if (dp[i][j]) {
+                        int curLen = j - i +1;
+                        if (curLen > maxLen) {
+                            maxLen = curLen;
+                            start = i;
+                        }
+                    }
+                }
+
+            }
+            return s.substring(start, start + maxLen);
+        }
+    }
+
     //LC438 找到子字符串中的异位词（双指针、滑动窗口）
     class Solution {
         public List<Integer> findAnagrams(String s, String p) {

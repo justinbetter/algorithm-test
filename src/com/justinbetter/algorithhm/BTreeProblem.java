@@ -17,6 +17,24 @@ public class BTreeProblem {
         // write your code here
     }
 
+    //LC538 把二叉搜索树转换为累加树(反向中序遍历）
+    class convertBSTSolution {
+        int sum = 0;
+        public TreeNode convertBST(TreeNode root) {
+            //mine：看懂了后序遍历
+            if(root == null) {
+                return null;
+            }
+
+            TreeNode right = convertBST(root.right);
+            //关键：计算总和 sum
+            sum += root.val;
+            root.val = sum;
+            TreeNode left = convertBST(root.left);
+            //left 怎么加过去？不需要加，继续遍历
+            return root;
+        }
+    }
 
     //LC617 合并二叉树
     public TreeNode mergeTrees(TreeNode root1, TreeNode root2) {

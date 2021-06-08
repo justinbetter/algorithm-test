@@ -12,6 +12,147 @@ public class ArraySortProblem {
 //        rotateSolution.rotate(nums, 3);
     }
 
+    public int maxArea(int[] height) {
+        //双指针缩减范围，移动短的
+        int left = 0;
+        int right = height.length-1;
+        int res = 0;
+        while(left < right) {
+            if (height[left] < height[right]){
+                res = Math.max(res,(right-left)*height[left++]);
+            }else {
+                res = Math.max(res,(right-left)*height[right--]);
+            }
+        }
+        return res;
+    }
+
+    //LC200 岛屿数量
+    class numIslandsSolution {
+
+        boolean[][] visited;
+        int m;
+        int n;
+        int[][] direct = new int[][]{{-1,0},{0,-1},{1,0},{0,1}};
+        public int numIslands(char[][] grid) {
+            //回溯 dfs visited direction
+            m = grid.length;
+            n = grid[0].length;
+            visited = new boolean[m][n];
+            int res = 0;
+            for(int i=0;i < m;i++) {
+                for (int j=0;j < n;j++) {
+                    if(grid[i][j] == '1' && !visited[i][j]) {
+                        dfs(i,j,grid);
+                        res++;
+                    }
+                }
+            }
+            return res;
+        }
+        private void dfs(int i, int j,char[][] grid) {
+            visited[i][j] = true;
+            //开始移动
+            for(int k=0;k < 4;k++) {
+                int x = i+direct[k][0];
+                int y = j + direct[k][1];
+                if (x >= 0 && x < m && y >=0 && y < n && grid[x][y] == '1'&& !visited[x][y]) {
+                    dfs(x,y,grid);
+                }
+            }
+
+        }
+    }
+
+    public int lengthOfLongestSubstring(String s) {
+        HashMap<Character,Integer> map = new HashMap<>();
+        int res = 0;
+        int left = 0;
+        for (int i=0; i< s.length();i++) {
+            if (map.containsKey(s.charAt(i))) {
+                left = Math.max(left,map.get(s.charAt(i)));
+            }
+            res = Math.max(res,i-left+1);
+            map.put(s.charAt(i),i+1);
+        }
+        return res;
+    }
+
+
+    //LC739 每日温度（获取比当前值更大的数，返回用距离组成新数组）
+    class dailyTemperaturesSolution {
+        public int[] dailyTemperatures(int[] temperatures) {
+            //mine：暴力法：双循环遍历数组，获取比当前值大的第一个数字
+            //other：使用栈，获取当前栈
+            //每次放入栈元素，如果当前数字大于栈顶元素的数字，
+            //那么一定是第一个大于栈顶元素的数，直接求出下标差就是二者的距离
+
+            LinkedList<Integer> stack = new LinkedList();
+            int[] res = new int[temperatures.length];
+            for (int i = 0 ; i < temperatures.length; i++) {
+                while(!stack.isEmpty() && temperatures[i] > temperatures[stack.peek()]) {
+                    int preIndex = stack.pop();
+                    res[preIndex] = i - preIndex;
+                }
+                stack.push(i);
+            }
+            return res;
+
+        }
+    }
+
+    //LC581 最短无序连续子数组
+    class findUnsortedSubarraySolution {
+        public int findUnsortedSubarray(int[] nums) {
+            //mine：知道连续非有序子数组，排序，整个数组升序
+            //记录非升序的子数组长度，
+            //other：先排序，比较左右边界不同的数字
+            //2. 从左到右维持最大值，寻找右边界end
+            int[] cloneNums = nums.clone();
+            Arrays.sort(cloneNums);
+            //注意初始化边界
+            int min = nums.length;
+            int max = 0;
+            for (int i = 0; i < nums.length; i++) {
+                if (cloneNums[i] != nums[i]) {
+                    //注意：min、max 是左右索引
+                    min = Math.min(min,i);
+                    max = Math.max(max,i);
+                }
+            }
+            return max - min >= 0 ? max - min + 1 : 0;
+        }
+    }
+
+    //LC560 和为K的子数组（前缀和+hash表计数）
+    class subarraySumSolution {
+        public int subarraySum(int[] nums, int k) {
+            //mine：动态规划？dp[i][j] = dp[i-1][j] || dp[i-1][k - j]
+            //other: 魔怔了，前缀和加hash表 判断k的次数
+            Map<Integer, Integer> preSumFreq = new HashMap<>();
+            // 对于下标为 0 的元素，前缀和为 0，个数为 1
+            preSumFreq.put(0, 1);
+
+            int preSum = 0;
+            int count = 0;
+            for (int num : nums) {
+                preSum += num;
+
+                //关键：找到和当前前缀和相差k的前缀和，计数
+                // 先获得前缀和为 preSum - k 的个数，加到计数变量里
+                //如果 map 中存在 key 为「当前前缀和 - k」，说明这个之前出现的前缀和，
+                //满足「当前前缀和 - 该前缀和 == k」，它出现的次数，累加给 count。
+                if (preSumFreq.containsKey(preSum - k)) {
+                    count += preSumFreq.get(preSum - k);
+                }
+
+                // 然后维护 preSumFreq 的定义
+                preSumFreq.put(preSum, preSumFreq.getOrDefault(preSum, 0) + 1);
+            }
+            return count;
+
+        }
+    }
 
     //LC287 寻找（时间换空间的）重复数
     class findDuplicateSolution {
