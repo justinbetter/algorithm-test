@@ -2,6 +2,7 @@ package com.justinbetter.algorithhm;
 
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 
 public class dpProblem {
@@ -10,6 +11,45 @@ public class dpProblem {
         // write your code here
         char[][] grid = new char[][]{{'1', '1', '1', '1', '0'}, {'1', '1', '0', '1', '0'}, {'1', '1', '0', '0', '0'}, {'0', '0', '0', '0', '0'}};
         System.out.println(new numIslandsSolution().numIslands(grid));
+    }
+
+    class countSubstringsSolution {
+        public int countSubstrings(String s) {
+            //中心扩散法，以单字符或者双字符为中心
+            int n = s.length(), ans = 0;
+            for (int i = 0; i < 2 * n - 1; ++i) {
+                //偶数是0，奇数是1
+                int l = i / 2;
+                int r = i / 2 + i % 2;
+                while (l >= 0 && r < n && s.charAt(l) == s.charAt(r)) {
+                    --l;
+                    ++r;
+                    ++ans;
+                }
+            }
+            return ans;
+        }
+    }
+
+    //LC139 单词拆分
+    class wordBreakSolution {
+        public boolean wordBreak(String s, List<String> wordDict) {
+            //dp[i]表示s前i个字符能否拆分
+            //dp[i] = dp[j] & check(j,i)
+            HashSet<String> hs = new HashSet<>(wordDict);
+            int n = s.length();
+            boolean[] dp = new boolean[n+1];
+            dp[0]  = true;
+            for (int i = 1;i <= n;i++) {
+                for(int j=i-1;j >= 0;j--){
+                    if (dp[j] && hs.contains(s.substring(j,i))){
+                        dp[i] = true;
+                        break;
+                    }
+                }
+            }
+            return dp[n];
+        }
     }
 
     //LC494 目标和(数组加起来等于target的方法数量）

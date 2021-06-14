@@ -12,6 +12,115 @@ public class ArraySortProblem {
 //        rotateSolution.rotate(nums, 3);
     }
 
+    class topKFrequentSolution {
+        public int[] topKFrequent(int[] nums, int k) {
+            //hashmap 优先队列 数字 次数
+            HashMap<Integer,Integer> map = new HashMap<>();
+            for(int i=0; i< nums.length;i++) {
+                int key = nums[i];
+                map.put(key,map.getOrDefault(key,0)+1);
+            }
+            //int[]{key,count}
+            PriorityQueue<int[]> queue = new PriorityQueue<int[]>(new Comparator<int[]>(){
+                public int compare(int[] m,int[] n) {
+                    return m[1] - n[1];//次数比较，次数小的在前面
+                }
+            });
+            //和小根堆顶比较
+            for (int _key : map.keySet()){
+                int count = map.get(_key);
+                if(queue.size() == k){
+                    if (queue.peek()[1] < count){
+                        queue.poll();
+                        queue.offer(new int[]{_key,count});
+                    }
+                }else {
+                    queue.offer(new int[]{_key,count});
+                }
+            }
+            int[] ans = new int[k];
+            for (int i=0;i<k;i++) {
+                ans[i] = queue.poll()[0];
+            }
+            return ans;
+        }
+    }
+
+    class maxProductSolution {
+        public int maxProduct(int[] nums) {
+            int max = Integer.MIN_VALUE;
+            //  考虑有负数，需要维护一个最小值和最大值交换
+            int imax = 1;
+            int imin = 1;
+            for(int i = 0;i < nums.length;i++) {
+                if (nums[i] < 0) {
+                    int temp = imax;
+                    imax = imin;
+                    imin = temp;
+                }
+                imax = Math.max(nums[i]*imax,nums[i]);
+                imin = Math.min(nums[i]*imin,nums[i]);
+
+                //记录每次的最大值，因为中间可能改变了
+                max = Math.max(max,imax);
+            }
+            return max;
+        }
+    }
+
+    class rotateRectangularSolution {
+        public void rotate(int[][] matrix) {
+            //转置矩阵
+            int n = matrix.length;
+            for (int i=0;i < n;i++) {
+                for (int j=i;j < n;j++) {
+                    int temp = matrix[i][j];
+                    matrix[i][j] = matrix[j][i];
+                    matrix[j][i] = temp;
+                }
+            }
+            //左右反转矩阵列
+            for (int i=0;i <n;i++){
+                for(int j=0;j < n/2;j++) {
+                    int temp = matrix[i][j];
+                    matrix[i][j] = matrix[i][n-j-1];
+                    matrix[i][n-j-1] = temp;
+                }
+            }
+        }
+    }
+
+    class nextPermutationSolution {
+        public void nextPermutation(int[] nums) {
+            //从后向前 寻找第一个升序元素对i，j，选择降序中大于i中最接近的值
+            int i = nums.length -2;
+            while(i >= 0 && nums[i+1] <= nums[i]){
+                i--;
+            }
+            if(i>=0){ //cover 没有找到升序的情况
+                int j = nums.length -1;
+                while (j >= 0 && nums[j] <= nums[i]){
+                    j--;
+                }
+                swap(nums,i,j);
+            }
+            reverse(nums,i+1);
+        }
+        public void reverse(int[] nums,int start) {
+            int i = start,j=nums.length-1;
+            while(i < j) {
+                swap(nums,i,j);
+                i++;
+                j--;
+            }
+        }
+        public void swap(int[] nums,int i,int j) {
+            int temp = nums[i];
+            nums[i] = nums[j];
+            nums[j] = temp;
+        }
+    }
+
     public int maxArea(int[] height) {
         //双指针缩减范围，移动短的
         int left = 0;

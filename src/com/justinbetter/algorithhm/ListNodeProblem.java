@@ -10,7 +10,27 @@ public class ListNodeProblem {
         }
     }
 
-h
+    static class TreeNode {
+        int val;
+        TreeNode left;
+        TreeNode right;
+
+        TreeNode(int x) {
+            val = x;
+        }
+    }
+
+    class isSubStructureSolution {
+        public boolean isSubStructure(TreeNode A, TreeNode B) {
+            return (A != null && B != null) && (dfs(A, B) || isSubStructure(A.left, B) || isSubStructure(A.right, B));
+        }
+
+        boolean dfs(TreeNode A, TreeNode B) {
+            if (B == null) return true;
+            if (A == null || B.val != A.val) return false;
+            return dfs(A.left, B.left) && dfs(A.right, B.right);
+        }
+    }
 
     //回文链表
     class isPalindromeSolution {
